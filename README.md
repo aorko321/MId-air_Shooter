@@ -1,5 +1,3 @@
-# Welcome to GitHub Desktop!
+Main.py:
+This is the main file that runs the game. It imports the pygame class from the game module and creates an instance of it, then calls the run method to show the game with the most recent updates.
 
-This is your README. READMEs are where you can communicate what your project is and how to use it.
-
-Write your name on line 6, save it, and then head back to GitHub Desktop.
