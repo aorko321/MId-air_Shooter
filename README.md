@@ -28,7 +28,15 @@ States-
     highscores  – leaderboard table loaded live from CSV
 
 
+constants.py:
+All shared game constants and colour definitions.
+
+
 __init__.py:
 Exposes all entity classes so they can be imported directly from the package
+
+
+player.py:
+Player entity — handles movement, aiming, shooting, health, and HUD rendering.
 
 
