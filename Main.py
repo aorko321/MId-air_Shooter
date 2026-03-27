@@ -5,10 +5,8 @@
 
 from game import pygame
 
-from game import ShooterGame
-93a32f5551c6b56fbcd6e3c369af6294b166cab7 # type: ignore
-
+import game as game_
 if __name__ == "__main__":
-    game = ShooterGame()
+    game = game_.ShooterGame()
     game.run()
     

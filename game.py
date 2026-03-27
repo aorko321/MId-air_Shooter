@@ -4,7 +4,8 @@ import pygame          # pyright: ignore[reportMissingImports]
 import math
 import sys
 
-from constants import (                # pyright: ignore[reportMissingImports]
+from constants import (                
+    # pyright: ignore[reportMissingImports]
     SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE, FPS,
     ENEMY_SPAWN_RATE, HIGH_SCORE_FILE,
     STATE_MENU, STATE_PLAYING, STATE_GAME_OVER, STATE_HIGHSCORES,
