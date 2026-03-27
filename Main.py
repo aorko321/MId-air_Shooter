@@ -1,6 +1,6 @@
-from game import pygame
+from game import ShooterGame
 
 if __name__ == "__main__":
-    game = pygame()
+    game = ShooterGame()
     game.run()
     
