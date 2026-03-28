@@ -263,7 +263,7 @@ class ShooterGame:
             cy += gap
 
         if self.is_high_score and not self.name_saved:
-            hs = self.med_font.render("New High Score!", True, GOLD)
+            hs = self.med_font.render("Save Score?", True, GOLD)
             self.screen.blit(hs, (SCREEN_WIDTH // 2 - hs.get_width() // 2, cy)); cy += 44
 
             prompt = self.font.render("Enter your name and press ENTER:", True, LIGHT_GRAY)

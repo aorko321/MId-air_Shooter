@@ -69,7 +69,7 @@ class Enemy:
         return None
 
     def draw(self, surface: pygame.Surface):
-        color = PURPLE if self.enemy_type == "Shooter" else RED
+        color = RED if self.enemy_type == "Shooter" else PURPLE
         tip = (int(self.x + math.cos(math.radians(self.angle))       * self.radius * 1.5),
                int(self.y + math.sin(math.radians(self.angle))       * self.radius * 1.5))
         lpt = (int(self.x + math.cos(math.radians(self.angle + 130)) * self.radius),
