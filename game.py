@@ -1,12 +1,12 @@
 from typing import Self
 
-import pygame          # pyright: ignore[reportMissingImports]
+import pygame
 import math
 import sys
 
 from constants import *
-
 from entities import Player, Enemy, Bullet, Storage
+
 
 class ShooterGame:
     def __init__(self):
@@ -22,32 +22,29 @@ class ShooterGame:
         self.storage  = Storage(HIGH_SCORE_FILE)
         self.state    = STATE_MENU
 
-        # Menu button rectangles (built once, reused every frame)
         btn_w, btn_h = 260, 52
         cx = SCREEN_WIDTH // 2 - btn_w // 2
         self.btn_start  = pygame.Rect(cx, 260, btn_w, btn_h)
         self.btn_scores = pygame.Rect(cx, 330, btn_w, btn_h)
         self.btn_quit   = pygame.Rect(cx, 400, btn_w, btn_h)
 
-        # Name-entry state used on the game-over screen
         self.name_input    = ""
         self.name_saved    = False
         self.is_high_score = False
 
         self._init_gameplay()
 
-    # ======== Gameplay reset =============
+    # ── Gameplay reset ─────────────────────────────────────────────────────────
     def _init_gameplay(self):
         """Reset all in-game objects for a fresh run."""
-        self.player              = Player(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)
-        self.bullets: list       = []
-        self.enemies: list       = []
-        self.enemy_spawn_timer   = ENEMY_SPAWN_RATE
-        self.wave                = 1
-        self.enemies_killed      = 0
-    
-    
-     # ========== Main loop ==========
+        self.player            = Player(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)
+        self.bullets: list     = []
+        self.enemies: list     = []
+        self.enemy_spawn_timer = ENEMY_SPAWN_RATE
+        self.wave              = 1
+        self.enemies_killed    = 0
+
+    # ── Main loop ──────────────────────────────────────────────────────────────
     def run(self):
         """Start and maintain the game loop until the window is closed."""
         while True:
@@ -59,9 +56,8 @@ class ShooterGame:
                 self._handle_event(event)
             self._update(dt)
             self._draw()
-    
-    
-     # ========== Event dispatching ==========
+
+    # ── Event dispatch ─────────────────────────────────────────────────────────
     def _handle_event(self, event: pygame.event.Event):
         if   self.state == STATE_MENU:       self._menu_event(event)
         elif self.state == STATE_PLAYING:    self._playing_event(event)
@@ -88,7 +84,7 @@ class ShooterGame:
             b = self.player.shoot()
             if b:
                 self.bullets.append(b)
-    
+
     def _game_over_event(self, event: pygame.event.Event):
         if event.type == pygame.KEYDOWN:
             key = event.key
@@ -109,13 +105,13 @@ class ShooterGame:
             if key == pygame.K_r:
                 self._init_gameplay()
                 self.state = STATE_PLAYING
-       
-        def _highscores_event(self, event: pygame.event.Event):
-         if event.type == pygame.KEYDOWN:
+
+    def _highscores_event(self, event: pygame.event.Event):
+        if event.type == pygame.KEYDOWN:
             if event.key in (pygame.K_ESCAPE, pygame.K_RETURN, pygame.K_SPACE):
                 self.state = STATE_MENU
-   
-   # =========== Update ===============
+
+    # ── Update ─────────────────────────────────────────────────────────────────
     def _update(self, dt: float):
         if self.state != STATE_PLAYING:
             return
@@ -123,7 +119,6 @@ class ShooterGame:
         keys   = pygame.key.get_pressed()
         mx, my = pygame.mouse.get_pos()
 
-        # Space bar fires as well as mouse click
         if keys[pygame.K_SPACE]:
             b = self.player.shoot()
             if b:
@@ -132,28 +127,23 @@ class ShooterGame:
         self.player.update(keys, dt)
         self.player.aim_at(mx, my)
 
-        # Enemy spawning — interval shrinks each wave
         self.enemy_spawn_timer -= dt
         if self.enemy_spawn_timer <= 0:
             self.enemies.append(Enemy(self.wave))
             self.enemy_spawn_timer = max(0.4, ENEMY_SPAWN_RATE - self.wave * 0.1)
-            
-         # Advance all bullets, remove off-screen ones
+
         for b in self.bullets[:]:
             b.update()
             if b.is_off_screen():
                 self.bullets.remove(b)
 
-        # Advance enemies and resolve collisions
         for enemy in self.enemies[:]:
             enemy.update(self.player.x, self.player.y, dt)
 
-            # Shooter enemies fire back
             shot = enemy.shoot()
             if shot:
                 self.bullets.append(shot)
 
-         # Enemy body touches player
             if math.hypot(enemy.x - self.player.x,
                           enemy.y - self.player.y) < (enemy.radius + self.player.radius):
                 dead = self.player.take_damage(20)
@@ -161,11 +151,11 @@ class ShooterGame:
                 if dead:
                     self._on_death()
                 continue
+
             if enemy.is_off_screen():
                 self.enemies.remove(enemy)
                 continue
 
-         # Player bullets hit enemy
             for b in self.bullets[:]:
                 if b.owner != "player":
                     continue
@@ -180,12 +170,11 @@ class ShooterGame:
                         self.bullets.remove(b)
                     break
 
-        # ====Enemy bullets hit player=======
         for b in self.bullets[:]:
             if b.owner != "enemy":
                 continue
             if math.hypot(b.x - self.player.x,
-                           b.y - self.player.y) < (b.radius + self.player.radius):
+                          b.y - self.player.y) < (b.radius + self.player.radius):
                 dead = self.player.take_damage(b.damage)
                 self.bullets.remove(b)
                 if dead:
@@ -198,7 +187,7 @@ class ShooterGame:
         self.is_high_score = self.storage.is_high_score(self.player.score)
         self.state         = STATE_GAME_OVER
 
-    # ========== Draw ==============
+    # ── Draw ───────────────────────────────────────────────────────────────────
     def _draw(self):
         self.screen.fill(DARK_BG)
         self._draw_grid()
@@ -216,7 +205,7 @@ class ShooterGame:
         for gy in range(0, SCREEN_HEIGHT, 50):
             pygame.draw.line(self.screen, GRID_COLOR, (0, gy), (SCREEN_WIDTH, gy))
 
-    # =========== Menu ===================
+    # ── Menu ───────────────────────────────────────────────────────────────────
     def _draw_menu(self):
         title = self.big_font.render("MID-AIR SHOOTER", True, CYAN)
         self.screen.blit(title, (SCREEN_WIDTH // 2 - title.get_width() // 2, 120))
@@ -228,7 +217,7 @@ class ShooterGame:
         for rect, label, col in [
             (self.btn_start,  "START GAME",  GREEN),
             (self.btn_scores, "HIGH SCORES", GOLD),
-            (self.btn_quit,   "QUIT", RED),
+            (self.btn_quit,   "QUIT",        RED),
         ]:
             hovered = rect.collidepoint(mouse_pos)
             bg      = (50, 50, 80) if hovered else (30, 30, 55)
@@ -244,7 +233,7 @@ class ShooterGame:
             True, GRAY)
         self.screen.blit(hint, (SCREEN_WIDTH // 2 - hint.get_width() // 2, SCREEN_HEIGHT - 30))
 
-        # ── Playing ────────────────────────────────────────────────────────────────
+    # ── Playing ────────────────────────────────────────────────────────────────
     def _draw_playing(self):
         for b in self.bullets: b.draw(self.screen)
         for e in self.enemies: e.draw(self.screen)
@@ -257,7 +246,7 @@ class ShooterGame:
         esc = self.font.render("ESC: Menu", True, GRAY)
         self.screen.blit(esc, (SCREEN_WIDTH - esc.get_width() - 10, SCREEN_HEIGHT - 22))
 
-    # ======= Game Over ==============
+    # ── Game Over ──────────────────────────────────────────────────────────────
     def _draw_game_over(self):
         overlay = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.SRCALPHA)
         overlay.fill((0, 0, 0, 180))
@@ -272,6 +261,7 @@ class ShooterGame:
             s = font.render(text, True, color)
             self.screen.blit(s, (SCREEN_WIDTH // 2 - s.get_width() // 2, cy))
             cy += gap
+
         if self.is_high_score and not self.name_saved:
             hs = self.med_font.render("New High Score!", True, GOLD)
             self.screen.blit(hs, (SCREEN_WIDTH // 2 - hs.get_width() // 2, cy)); cy += 44
@@ -294,7 +284,7 @@ class ShooterGame:
             s = self.font.render(label, True, color)
             self.screen.blit(s, (SCREEN_WIDTH // 2 - s.get_width() // 2, cy)); cy += 28
 
-    # ======= High Scores ==============
+    # ── High Scores ────────────────────────────────────────────────────────────
     def _draw_highscores(self):
         title = self.big_font.render("HIGH SCORES", True, GOLD)
         self.screen.blit(title, (SCREEN_WIDTH // 2 - title.get_width() // 2, 40))
@@ -327,24 +317,4 @@ class ShooterGame:
 
         back = self.font.render("ENTER / ESC / SPACE — back to menu", True, GRAY)
         self.screen.blit(back, (SCREEN_WIDTH // 2 - back.get_width() // 2, SCREEN_HEIGHT - 30))
-
-
-
-
-
-
-
-
-
         
-
-
-
-
-
-
-
-
-
-
-
