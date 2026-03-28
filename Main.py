@@ -3,10 +3,10 @@
 # It imports the pygame class from the game module and creates an instance of it,
 #  then calls the run method to show the game with the most recent updates.
 
-from game import pygame
+from game import ShooterGame
 
-import game as game_
+
 if __name__ == "__main__":
-    game = game_.ShooterGame()
+    game = ShooterGame()
     game.run()
     

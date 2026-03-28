@@ -4,14 +4,7 @@ import pygame          # pyright: ignore[reportMissingImports]
 import math
 import sys
 
-from constants import (                
-    # pyright: ignore[reportMissingImports]
-    SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE, FPS,
-    ENEMY_SPAWN_RATE, HIGH_SCORE_FILE,
-    STATE_MENU, STATE_PLAYING, STATE_GAME_OVER, STATE_HIGHSCORES,
-    WHITE, RED, GREEN, CYAN, YELLOW, GRAY, LIGHT_GRAY, GOLD,
-    DARK_BG, GRID_COLOR, ORANGE,
-)
+from constants import *
 
 from entities import Player, Enemy, Bullet, Storage
 
@@ -331,8 +324,9 @@ class ShooterGame:
                 ):
                     s = self.font.render(val, True, rank_col)
                     self.screen.blit(s, (cx, row_y))
-    back = Self.font.render("ENTER / ESC / SPACE — back to menu", True, GRAY)
-    Self.screen.blit(back, (SCREEN_WIDTH // 2 - back.get_width() // 2, SCREEN_HEIGHT - 30))
+
+        back = self.font.render("ENTER / ESC / SPACE — back to menu", True, GRAY)
+        self.screen.blit(back, (SCREEN_WIDTH // 2 - back.get_width() // 2, SCREEN_HEIGHT - 30))
 
 
 
