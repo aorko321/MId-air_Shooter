@@ -36,7 +36,21 @@ __init__.py:
 Exposes all entity classes so they can be imported directly from the package
 
 
+
+bullet.py:
+Bullet class used for both player and enemy projectiles. The 'owner' parameter controls appearance and damage values.
+
+
+
+enemy.py:
+Normal(red) enemy chases and body-slams the player and Shooter(purple) enemy fires bullets at the player periodically while slamming. Both spawns off-screen and moves toward the player.
+
+
+
 player.py:
 Player entity — handles movement, aiming, shooting, health, and HUD rendering.
 
 
+storage.py:
+Handles all reading and writing of high scores to higghscores.csv
+    
